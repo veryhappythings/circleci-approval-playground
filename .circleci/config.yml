@@ -1,0 +1,73 @@
+version: 2.1
+
+workflows:
+  main:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - ready-to-migrate:
+          type: approval
+          requires:
+            - test
+      - migrate:
+          requires:
+            - ready-to-migrate
+      - ready-to-deploy:
+          type: approval
+          requires:
+            - migrate
+      - spin-up-green:
+          requires:
+            - ready-to-deploy
+      - load-green:
+          requires:
+            - spin-up-green
+      - drain-blue:
+          requires:
+            - load-green
+      - ready-to-destroy:
+          type: approval
+          requires:
+            - drain-blue
+      - destroy-blue:
+          requires:
+            - ready-to-destroy
+
+jobs:
+  build:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: /bin/true
+  test:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: /bin/true
+  migrate:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: /bin/true
+  spin-up-green:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: /bin/true
+  load-green:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: /bin/true
+  drain-blue:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: /bin/true
+  destroy-blue:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: /bin/true
